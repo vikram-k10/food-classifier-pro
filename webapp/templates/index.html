@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Indian Food Classifier</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <div class="brand">
+        <span class="logo" aria-hidden="true">🍛</span>
+        <div>
+          <h1>Indian Food Classifier</h1>
+          <p class="sub">Deep learning with explainable predictions</p>
+        </div>
+      </div>
+      <button id="theme" class="ghost" type="button" aria-label="Toggle dark mode">◐ Theme</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    {% if not ready %}
+    <section class="card warn">
+      <h2>Model not loaded</h2>
+      <p>{{ error }}</p>
+      <p class="muted">Train a model with <code>python -m foodai.train --data-dir &lt;dataset&gt;</code>, then copy
+        <code>runs/&lt;name&gt;/best.pt</code> to <code>models/best.pt</code> and restart the app.</p>
+    </section>
+    {% else %}
+    <section class="card">
+      <div id="drop" class="drop" tabindex="0" role="button" aria-label="Choose or drop a food photo">
+        <input id="file" type="file" accept="image/jpeg,image/png,image/webp,image/bmp" hidden>
+        <div class="drop-text">
+          <strong>Drop a food photo here</strong>
+          <span>or click to choose · JPG, PNG, WEBP · up to 8 MB</span>
+        </div>
+        <img id="preview" alt="Selected photo preview" hidden>
+      </div>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+
+    <section id="result" class="card" hidden aria-live="polite">
+      <div class="verdict">
+        <div>
+          <p class="eyebrow" id="eyebrow">Prediction</p>
+          <h2 id="label">—</h2>
+        </div>
+        <div class="conf"><span id="confval">0%</span><small>confidence</small></div>
+      </div>
+      <p id="unsure" class="notice" hidden>
+        The model isn't confident enough to name this dish. It may not be one of the supported foods,
+        or the photo may be unclear. The closest guesses are below.
+      </p>
+
+      <div class="grid">
+        <div>
+          <h3>Top predictions</h3>
+          <ul id="bars" class="bars"></ul>
+          <div id="nutrition" class="nutri" hidden></div>
+        </div>
+        <div>
+          <h3>What the model looked at</h3>
+          <div class="views">
+            <figure><img id="view" alt="Image as seen by the model"><figcaption>Model input</figcaption></figure>
+            <figure><img id="cam" alt="Grad-CAM heat-map"><figcaption>Grad-CAM</figcaption></figure>
+          </div>
+          <p class="muted small">Warmer colours mark regions that pushed the model towards its answer.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card slim" id="modelcard" hidden>
+      <h3>Model card</h3>
+      <dl id="mc"></dl>
+    </section>
+    {% endif %}
+  </main>
+
+  <footer class="wrap muted small">
+    Predictions are statistical estimates. Calorie figures are rough, typical-serving ranges.
+  </footer>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

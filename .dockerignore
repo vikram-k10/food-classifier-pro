@@ -1,0 +1,12 @@
+runs/
+data/*
+!data/nutrition.json
+results/
+tests/
+docs/
+.git/
+.github/
+**/__pycache__/
+*.pyc
+.venv/
+env/
